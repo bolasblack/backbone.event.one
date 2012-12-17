@@ -15,13 +15,18 @@
 
 ```coffeescript
 eventSpy = sinon.spy()
+filterSpy = sinon.spy()
 
 obj = _.extend {}, Backbone.Events
-obj.one "test", eventSpy, context, ->
-  _this.filterSpy.apply this, arguments
-  _this.filterReturnValue
+obj.one "test", eventSpy, context, (returnValue) ->
+  filterSpy.apply this, arguments
+  returnValue
 
-obj.trigger "test"
-obj.trigger "test"
+obj.trigger "test", false
+filterSpy.called.should.be.true
+eventSpy.called.should.be.false
+
+obj.trigger "test", true
+filterSpy.calledTwice.should.be.true
 eventSpy.calledOnce.should.be.true
 ```
