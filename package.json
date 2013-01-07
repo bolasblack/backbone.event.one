@@ -1,6 +1,6 @@
 {
   "name": "backbone.event.one",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "add `one` method to Backbone.Events",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": "",
   "keywords": [
-    "backbone", "backbone.events"
+    "backbone", "events", "once"
   ],
   "author": "c4605 (bolasblack@gmail.com)",
   "license": "MIT",
@@ -16,6 +16,9 @@
     "node": ">= 0.6.0"
   },
   "devDependencies": {
-    "coffee-script": "~1.3.3"
+    "coffee-script": "~1.3.3",
+    "grunt": "~0.4.0a",
+    "grunt-cli": "~0.1.1",
+    "grunt-mocha": "https://github.com/kmiyashiro/grunt-mocha/tarball/master"
   }
 }

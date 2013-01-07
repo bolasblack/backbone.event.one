@@ -1,8 +1,15 @@
 coffeeDir = ./node_modules/coffee-script/bin/coffee
 
-test:
+define compile
 	$(coffeeDir) -o ./test/js/ ./test/spec/
 	$(coffeeDir) -o ./lib/ ./src/
-	@echo "Compiled tests, you can now open test/tests.html and run them"
+endef
 
-.PHONY: test
+build :
+	$(compile)
+
+test :
+	$(compile)
+	grunt test
+
+.PHONY: test build

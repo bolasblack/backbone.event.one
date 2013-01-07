@@ -6,16 +6,24 @@
     should = chai.should();
     beforeEach(function() {
       var _this;
-      this.eventSpy = sinon.spy();
+      this.event1Spy = sinon.spy();
+      this.event23Spy = sinon.spy();
+      this.event4Spy = sinon.spy();
+      this.event5Spy = sinon.spy();
       this.filterSpy = sinon.spy();
       this.context = {};
       this.filterReturnValue = true;
       this.obj = _.extend({}, Backbone.Events);
       _this = this;
-      return this.obj.one("test", this.eventSpy, this.context, function() {
+      this.obj.one("test1", this.event1Spy, this.context, function() {
         _this.filterSpy.apply(this, arguments);
         return _this.filterReturnValue;
       });
+      this.obj.one("test2 test3", this.event23Spy, this.context);
+      return this.obj.one({
+        "test4": this.event4Spy,
+        "test5": this.event5Spy
+      }, this.context);
     });
     describe("the one method", function() {
       it("should be able to be extend", function() {
@@ -28,50 +36,60 @@
         }
         return _.extend({}, Backbone.Events)["one"].should.be.a("Function");
       });
-      return it("should be work", function() {
-        this.obj.trigger("test");
-        this.obj.trigger("test");
-        return this.eventSpy.calledOnce.should.be["true"];
+      it("should be work", function() {
+        this.obj.trigger("test1");
+        this.obj.trigger("test1");
+        return this.event1Spy.calledOnce.should.be["true"];
+      });
+      it("should work with jQuery event bind syntax", function() {
+        this.obj.trigger("test2");
+        this.event23Spy.calledOnce.should.be["true"];
+        this.obj.trigger("test3");
+        return this.event23Spy.calledTwice.should.be["true"];
+      });
+      return it("should work with event map syntax", function() {
+        this.obj.trigger("test4");
+        this.event4Spy.calledOnce.should.be["true"];
+        this.obj.trigger("test5");
+        return this.event5Spy.calledOnce.should.be["true"];
       });
     });
     describe("the whenFilter", function() {
-      it("should make event ignored if return false", function() {
-        this.filterReturnValue = false;
-        this.obj.trigger("test");
-        this.eventSpy.called.should.be["false"];
-        return this.filterSpy.calledOnce.should.be["true"];
-      });
-      it("should make event ignored if return false like value", function() {
-        this.filterReturnValue = "";
-        this.obj.trigger("test");
-        this.eventSpy.called.should.be["false"];
-        return this.filterSpy.calledOnce.should.be["true"];
-      });
       it("should be called", function() {
-        this.obj.trigger("test");
+        this.obj.trigger("test1");
         return this.filterSpy.calledOnce.should.be["true"];
       });
       it("should called on context", function() {
-        this.obj.trigger("test");
+        this.obj.trigger("test1");
         return this.filterSpy.calledOn(this.context).should.be["true"];
       });
-      return it("should get arguments passed in", function() {
-        this.obj.trigger("test", "some", "args");
+      it("should get arguments passed in", function() {
+        this.obj.trigger("test1", "some", "args");
         return this.filterSpy.withArgs("some", "args").calledOnce.should.be["true"];
+      });
+      it("should ignore event if return false", function() {
+        this.filterReturnValue = false;
+        this.obj.trigger("test1");
+        return this.event1Spy.called.should.be["false"];
+      });
+      return it("should ignore event if return false like value", function() {
+        this.filterReturnValue = "";
+        this.obj.trigger("test1");
+        return this.event1Spy.called.should.be["false"];
       });
     });
     return describe("the handler argument", function() {
       it("should be work", function() {
-        this.obj.trigger("test", "some", "args");
-        return this.eventSpy.withArgs("some", "args").calledOnce.should.be["true"];
+        this.obj.trigger("test1", "some", "args");
+        return this.event1Spy.withArgs("some", "args").calledOnce.should.be["true"];
       });
       it("should called on context", function() {
-        this.obj.trigger("test");
-        return this.eventSpy.calledOn(this.context).should.be["true"];
+        this.obj.trigger("test1");
+        return this.event1Spy.calledOn(this.context).should.be["true"];
       });
       return it("should get arguments passed in", function() {
-        this.obj.trigger("test", "some", "args");
-        return this.eventSpy.withArgs("some", "args").calledOnce.should.be["true"];
+        this.obj.trigger("test1", "some", "args");
+        return this.event1Spy.withArgs("some", "args").calledOnce.should.be["true"];
       });
     });
   });

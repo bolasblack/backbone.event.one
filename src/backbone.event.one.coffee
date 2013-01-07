@@ -2,6 +2,15 @@ do (_, Backbone) ->
   return unless Backbone?
 
   one = (events, handler, context, whenFilter) ->
+    if typeof events is "object"
+      for k, v of events
+        @one k, v, handler, context, whenFilter
+      return this
+    else if /\s+/.test events
+      for k in events.split /\s+/
+        @one k, handler, context, whenFilter
+      return this
+
     if _.isFunction(context)
       whenFilter = context
       context = this
@@ -16,8 +25,6 @@ do (_, Backbone) ->
 
     @on events, fn, context
 
-  return if Backbone.Events.one?
   Backbone.Events.one = one
   for objName in ["Model", "Collection", "View", "Router", "History"]
-    return if Backbone[objName]::one?
     _.extend Backbone[objName].prototype, Backbone.Events
